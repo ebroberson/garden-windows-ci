@@ -101,12 +101,12 @@ resources:
     branch: develop
     uri: git@github.com:cloudfoundry/winc-release.git
     private_key: {{TAS-RUNTIME-GITHUB_PRIVATE_KEY}}
-- name: winc-release-master
-  type: git
-  source:
-    branch: master
-    uri: git@github.com:cloudfoundry/winc-release.git
-    private_key: {{TAS-RUNTIME-GITHUB_PRIVATE_KEY}}
+# - name: winc-release-master
+#   type: git
+#   source:
+#     branch: master
+#     uri: git@github.com:cloudfoundry/winc-release.git
+#     private_key: {{TAS-RUNTIME-GITHUB_PRIVATE_KEY}}
 - name: garden-runc-release
   type: git
   source:
@@ -125,27 +125,27 @@ resources:
     regexp: 2019/tested/gcp/light-bosh-stemcell-(.*)-google-kvm-windows2019-go_agent.tgz
     access_key_id: ((BOSH_WINDOWS_S3_ADMIN_ACCESS_KEY_ID))
     secret_access_key: ((BOSH_WINDOWS_S3_ADMIN_SECRET_ACCESS_KEY))
-- name: version
-  type: semver
-  source:
-    access_key_id: ((BOSH_WINDOWS_S3_ADMIN_ACCESS_KEY_ID))
-    secret_access_key: ((BOSH_WINDOWS_S3_ADMIN_SECRET_ACCESS_KEY))
-    bucket: winc-release
-    initial_version: 0.0.0
-    key: version
-    region_name: us-east-1
+# - name: version
+#   type: semver
+#   source:
+#     access_key_id: ((BOSH_WINDOWS_S3_ADMIN_ACCESS_KEY_ID))
+#     secret_access_key: ((BOSH_WINDOWS_S3_ADMIN_SECRET_ACCESS_KEY))
+#     bucket: winc-release
+#     initial_version: 0.0.0
+#     key: version
+#     region_name: us-east-1
 - name: golang-release
   type: git
   source:
     uri: https://github.com/bosh-packages/golang-release.git
     tag_filter: v*
-- name: winc-release-github-release
-  type: github-release
-  source:
-    user: cloudfoundry
-    repository: winc-release
-    drafts: true
-    access_token: ((GREENHOUSE_CI_ACCESS_TOKEN))
+# - name: winc-release-github-release
+#   type: github-release
+#   source:
+#     user: cloudfoundry
+#     repository: winc-release
+#     drafts: true
+#     access_token: ((GREENHOUSE_CI_ACCESS_TOKEN))
 - name: pesto-cf-deployment
   type: bosh-deployment
   source:
@@ -166,7 +166,7 @@ groups:
     - test-nstar
     - bosh-template-specs
     - pesto-cats-2019
-    - shipit-minor
+    # - shipit-minor
 
 - name: cert-injector
   jobs:
@@ -600,26 +600,26 @@ jobs:
         release: winc-release-develop
       output_mapping:
         release-tarball: winc-tarball
-  - task: delete-deployment
-    file: ci/tasks/bosh-deld/task.yml
-    params:
-      BOSH_CA_CERT: ((PESTO_BOSH_CA_CERT))
-      BOSH_CLIENT: ((PESTO_BOSH_CLIENT))
-      BOSH_CLIENT_SECRET: ((PESTO_BOSH_CLIENT_SECRET))
-      BOSH_DEPLOYMENT: cf
-      BOSH_ENVIRONMENT: ((PESTO_BOSH_ENVIRONMENT))
-      JUMPBOX_IP: ((PESTO_JUMPBOX_IP))
-      JUMPBOX_SSH_KEY: ((PESTO_JUMPBOX_SSH_KEY))
-  - task: delete-stemcells
-    file: ci/tasks/bosh-delete-stemcells/task.yml
-    params:
-      BOSH_CA_CERT: ((PESTO_BOSH_CA_CERT))
-      BOSH_CLIENT: ((PESTO_BOSH_CLIENT))
-      BOSH_CLIENT_SECRET: ((PESTO_BOSH_CLIENT_SECRET))
-      BOSH_DEPLOYMENT: cf
-      BOSH_ENVIRONMENT: ((PESTO_BOSH_ENVIRONMENT))
-      JUMPBOX_IP: ((PESTO_JUMPBOX_IP))
-      JUMPBOX_SSH_KEY: ((PESTO_JUMPBOX_SSH_KEY))
+  # - task: delete-deployment
+  #   file: ci/tasks/bosh-deld/task.yml
+  #   params:
+  #     BOSH_CA_CERT: ((PESTO_BOSH_CA_CERT))
+  #     BOSH_CLIENT: ((PESTO_BOSH_CLIENT))
+  #     BOSH_CLIENT_SECRET: ((PESTO_BOSH_CLIENT_SECRET))
+  #     BOSH_DEPLOYMENT: cf
+  #     BOSH_ENVIRONMENT: ((PESTO_BOSH_ENVIRONMENT))
+  #     JUMPBOX_IP: ((PESTO_JUMPBOX_IP))
+  #     JUMPBOX_SSH_KEY: ((PESTO_JUMPBOX_SSH_KEY))
+  # - task: delete-stemcells
+  #   file: ci/tasks/bosh-delete-stemcells/task.yml
+  #   params:
+  #     BOSH_CA_CERT: ((PESTO_BOSH_CA_CERT))
+  #     BOSH_CLIENT: ((PESTO_BOSH_CLIENT))
+  #     BOSH_CLIENT_SECRET: ((PESTO_BOSH_CLIENT_SECRET))
+  #     BOSH_DEPLOYMENT: cf
+  #     BOSH_ENVIRONMENT: ((PESTO_BOSH_ENVIRONMENT))
+  #     JUMPBOX_IP: ((PESTO_JUMPBOX_IP))
+  #     JUMPBOX_SSH_KEY: ((PESTO_JUMPBOX_SSH_KEY))
   - put: pesto-cf-deployment
     params:
       manifest: cf-deployment/cf-deployment.yml
@@ -715,58 +715,58 @@ jobs:
       ENVIRONMENT: pesto
     input_mapping:
       bbl-state: garden-windows-environments
-  - task: cats
-    file: cf-deployment-concourse-tasks/run-cats/task.yml
-    params:
-      NODES: 4
-    attempts: 3
-    on_success:
-      task: delete-deployment
-      file: ci/tasks/bosh-deld/task.yml
-      params:
-        BOSH_CA_CERT: ((PESTO_BOSH_CA_CERT))
-        BOSH_CLIENT: ((PESTO_BOSH_CLIENT))
-        BOSH_CLIENT_SECRET: ((PESTO_BOSH_CLIENT_SECRET))
-        BOSH_DEPLOYMENT: cf
-        BOSH_ENVIRONMENT: ((PESTO_BOSH_ENVIRONMENT))
-        JUMPBOX_IP: ((PESTO_JUMPBOX_IP))
-        JUMPBOX_SSH_KEY: ((PESTO_JUMPBOX_SSH_KEY))
+  # - task: cats
+  #   file: cf-deployment-concourse-tasks/run-cats/task.yml
+  #   params:
+  #     NODES: 4
+  #   attempts: 3
+    # on_success:
+    #   task: delete-deployment
+    #   file: ci/tasks/bosh-deld/task.yml
+    #   params:
+    #     BOSH_CA_CERT: ((PESTO_BOSH_CA_CERT))
+    #     BOSH_CLIENT: ((PESTO_BOSH_CLIENT))
+    #     BOSH_CLIENT_SECRET: ((PESTO_BOSH_CLIENT_SECRET))
+    #     BOSH_DEPLOYMENT: cf
+    #     BOSH_ENVIRONMENT: ((PESTO_BOSH_ENVIRONMENT))
+    #     JUMPBOX_IP: ((PESTO_JUMPBOX_IP))
+    #     JUMPBOX_SSH_KEY: ((PESTO_JUMPBOX_SSH_KEY))
 
-- name: shipit-minor
-  serial: true
-  plan:
-  - in_parallel:
-    - get: ci
-    - get: winc-release-develop
-      passed: [pesto-cats-2019]
-    - get: winc-release-master
-    - get: version
-      params: {bump: minor}
-  - task: finalize-release
-    file: ci/tasks/finalize-release/task.yml
-    input_mapping: { release: winc-release-develop }
-    params:
-      RELEASE_NAME: winc
-      AWS_ACCESS_KEY_ID: ((BOSH_WINDOWS_S3_ADMIN_ACCESS_KEY_ID))
-      AWS_SECRET_ACCESS_KEY: ((BOSH_WINDOWS_S3_ADMIN_SECRET_ACCESS_KEY))
-  - put: winc-release-master
-    params:
-      repository: finalized-release/release
-      tag: version/number
-      tag_prefix: v
-  - put: winc-release-develop
-    params:
-      repository: finalized-release/release
-      merge: true
-  - put: version
-    params: {file: version/number}
-  - task: generate-github-release
-    input_mapping: { release: finalized-repo }
-    file: ci/tasks/generate-github-release/task.yml
-  - put: winc-release-github-release
-    params:
-      commitish: generated-release/commitish
-      name: generated-release/name
-      tag: generated-release/version
-      globs:
-      - finalized-release/winc-*.tgz
+# - name: shipit-minor
+#   serial: true
+#   plan:
+#   - in_parallel:
+#     - get: ci
+#     - get: winc-release-develop
+#       passed: [pesto-cats-2019]
+#     - get: winc-release-master
+#     - get: version
+#       params: {bump: minor}
+#   - task: finalize-release
+#     file: ci/tasks/finalize-release/task.yml
+#     input_mapping: { release: winc-release-develop }
+#     params:
+#       RELEASE_NAME: winc
+#       AWS_ACCESS_KEY_ID: ((BOSH_WINDOWS_S3_ADMIN_ACCESS_KEY_ID))
+#       AWS_SECRET_ACCESS_KEY: ((BOSH_WINDOWS_S3_ADMIN_SECRET_ACCESS_KEY))
+#   - put: winc-release-master
+#     params:
+#       repository: finalized-release/release
+#       tag: version/number
+#       tag_prefix: v
+#   - put: winc-release-develop
+#     params:
+#       repository: finalized-release/release
+#       merge: true
+#   - put: version
+#     params: {file: version/number}
+#   - task: generate-github-release
+#     input_mapping: { release: finalized-repo }
+#     file: ci/tasks/generate-github-release/task.yml
+#   - put: winc-release-github-release
+#     params:
+#       commitish: generated-release/commitish
+#       name: generated-release/name
+#       tag: generated-release/version
+#       globs:
+#       - finalized-release/winc-*.tgz
